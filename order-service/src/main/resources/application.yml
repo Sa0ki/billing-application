@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: order-service
+  data:
+    mongodb:
+      uri: "mongodb+srv://esaadkinan:tDEpgp2o6Kk0iLqY@cluster0.subirch.mongodb.net/application-database?retryWrites=true&w=majority"
+server:
+  port: 8083
+eureka:
+  instance:
+    prefer-ip-address: true
+  client.service-url:
+    defaultZone: http://localhost:8761/eureka
