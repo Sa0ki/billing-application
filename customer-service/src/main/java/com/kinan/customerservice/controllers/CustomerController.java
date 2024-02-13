@@ -1,11 +1,9 @@
 package com.kinan.customerservice.controllers;
 
+import com.kinan.customerservice.models.Customer;
 import com.kinan.customerservice.services.CustomerService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Eren
@@ -25,5 +23,13 @@ public class CustomerController {
     @PostMapping("/orders/confirm-order")
     ResponseEntity<Object> confirmOrder(@RequestParam String orderId){
         return this.customerService.confirmOrder(orderId);
+    }
+    @PostMapping("/bills/get-bill")
+    public ResponseEntity<Object> getBill(@RequestParam String orderId, @RequestBody Customer customer){
+        return this.customerService.getBill(orderId, customer);
+    }
+    @PostMapping("/bills/download-bill")
+    public ResponseEntity<Object> downloadBill(@RequestParam String billId){
+        return this.customerService.downloadBill(billId);
     }
 }

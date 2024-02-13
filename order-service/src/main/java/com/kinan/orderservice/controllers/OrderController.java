@@ -2,10 +2,7 @@ package com.kinan.orderservice.controllers;
 
 import com.kinan.orderservice.services.OrderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Eren
@@ -25,5 +22,9 @@ public class OrderController {
     @PostMapping("/confirm-order")
     public ResponseEntity<Object> confirmOrder(@RequestParam String orderId){
         return this.orderService.confirmOrder(orderId);
+    }
+    @PostMapping("/get-order")
+    public ResponseEntity<Object> getOrder(@RequestParam String orderId){
+        return this.orderService.getOrder(orderId);
     }
 }

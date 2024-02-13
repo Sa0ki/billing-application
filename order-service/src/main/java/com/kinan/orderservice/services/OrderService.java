@@ -6,14 +6,13 @@ import com.kinan.orderservice.models.Product;
 import com.kinan.orderservice.models.ResponseMessage;
 import com.kinan.orderservice.repositories.IOrderRepository;
 import com.kinan.orderservice.repositories.IProductRepository;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Eren
@@ -84,6 +83,12 @@ public class OrderService {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(order);
+    }
+    public ResponseEntity<Object> getOrder(String orderId){
+        Order order = this.orderRepository.findById(orderId).orElse(null);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Objects.requireNonNullElseGet(order, () -> new ResponseMessage("Order not found.")));
     }
     private Product productExists(String productId){
         return this.productRepository.getProductById(productId);
