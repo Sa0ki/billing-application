@@ -22,4 +22,8 @@ public class OrderController {
                                              @RequestParam Integer quantity){
         return this.orderService.placeOrder(customerId, productId, quantity);
     }
+    @PostMapping("/confirm-order")
+    public ResponseEntity<Object> confirmOrder(@RequestParam String orderId){
+        return this.orderService.confirmOrder(orderId);
+    }
 }

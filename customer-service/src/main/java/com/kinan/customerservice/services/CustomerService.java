@@ -19,4 +19,7 @@ public class CustomerService {
     public ResponseEntity<Object> placeOrder(String customerId, String productId, Integer quantity){
         return this.orderRepository.placeOrder(customerId, productId, quantity);
     }
+    public ResponseEntity<Object> confirmOrder(String orderId){
+        return this.orderRepository.confirmOrder(orderId);
+    }
 }

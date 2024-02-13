@@ -3,6 +3,7 @@ package com.kinan.orderservice.services;
 import com.kinan.orderservice.models.Order;
 import com.kinan.orderservice.models.OrderStatus;
 import com.kinan.orderservice.models.Product;
+import com.kinan.orderservice.models.ResponseMessage;
 import com.kinan.orderservice.repositories.IOrderRepository;
 import com.kinan.orderservice.repositories.IProductRepository;
 import org.springframework.http.HttpHeaders;
@@ -30,8 +31,8 @@ public class OrderService {
         Product product = productExists(productId);
         if(product == null)
             return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body("Product not found.");
+                .status(HttpStatus.OK)
+                .body(new ResponseMessage("Product not found."));
 
         // Update the product with the actual quantity wanted by the customer.
         product.setQuantity(quantity);
@@ -62,7 +63,27 @@ public class OrderService {
         return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
     public ResponseEntity<Object> confirmOrder(String orderId){
-        return null;
+        // Check if the order exists.
+        Order order = this.orderRepository.findById(orderId).orElse(null);
+
+        // If false, we return a message.
+        if(order == null)
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ResponseMessage("Order not found."));
+
+        // Check if the order has already been confirmed.
+        if(order.getStatus().equals(OrderStatus.CONFIRMED))
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseMessage("Order is already confirmed."));
+
+        // Else, we change its status to CONFIRMED.
+        order.setStatus(OrderStatus.CONFIRMED);
+        order = this.orderRepository.save(order);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(order);
     }
     private Product productExists(String productId){
         return this.productRepository.getProductById(productId);

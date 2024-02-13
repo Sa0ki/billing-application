@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "ORDER-SERVICE")
 public interface IOrderRepository {
     @PostMapping(value = "orders/place-order")
-    public ResponseEntity<Object> placeOrder(@RequestParam String customerId, @RequestParam String productId,
+    ResponseEntity<Object> placeOrder(@RequestParam String customerId, @RequestParam String productId,
                                              @RequestParam Integer quantity);
+    @PostMapping("orders/confirm-order")
+    ResponseEntity<Object> confirmOrder(@RequestParam String orderId);
 }
