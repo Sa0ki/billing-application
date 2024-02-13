@@ -1,12 +1,19 @@
 package com.kinan.customerservice.services;
 
 import com.kinan.customerservice.models.Customer;
+import com.kinan.customerservice.models.ResponseMessage;
 import com.kinan.customerservice.repositories.IBillRepository;
 import com.kinan.customerservice.repositories.ICustomerRepository;
 import com.kinan.customerservice.repositories.IOrderRepository;
 import feign.Response;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 /**
  * @author Eren
@@ -33,8 +40,19 @@ public class CustomerService {
     }
 
     public ResponseEntity<Object> downloadBill(String billId){
-        ResponseEntity<Object> response =  this.billRepository.downloadBill(billId);
-        System.out.println(response);
-        return response;
+        byte[] pdfBytes =  this.billRepository.downloadBill(billId);
+        if(pdfBytes == null)
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(new ResponseMessage("Bill not found."));
+
+        ByteArrayResource resource = new ByteArrayResource(pdfBytes);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture.pdf");
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 }

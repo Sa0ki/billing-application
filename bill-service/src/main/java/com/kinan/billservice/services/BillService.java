@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,6 +46,7 @@ public class BillService {
         ObjectMapper objectMapper = new ObjectMapper();
         try{
             order = this.orderMapper.convertToOrder(response.getBody());
+            if(order.getId() == null) return response;
         }catch(Exception e){
             e.printStackTrace();
             return response;
@@ -85,22 +87,9 @@ public class BillService {
                 .status(HttpStatus.CREATED)
                 .body(bill);
     }
-    public ResponseEntity<Object> downloadBill(String billId) {
+    public byte[] downloadBill(String billId) {
         Bill bill = this.billRepository.findById(billId).orElse(null);
-        if(bill != null){
-            byte[] pdfBytes = bill.getPdf();
-            ByteArrayResource ressource = new ByteArrayResource(pdfBytes);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture.pdf");
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(ressource);
-        }
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new ResponseMessage("Bill not found."));
+        return (bill == null) ? null: bill.getPdf();
     }
     private Boolean billExists(String orderId){
         return this.billRepository
