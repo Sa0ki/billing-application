@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/angular-service.iml" filepath="$PROJECT_DIR$/angular-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/bill-service/bill-service.iml" filepath="$PROJECT_DIR$/bill-service/bill-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/billing-application.iml" filepath="$PROJECT_DIR$/.idea/billing-application.iml" />
       <module fileurl="file://$PROJECT_DIR$/customer-service/customer-service.iml" filepath="$PROJECT_DIR$/customer-service/customer-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka-service/eureka-service.iml" filepath="$PROJECT_DIR$/eureka-service/eureka-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/frontend-service.iml" filepath="$PROJECT_DIR$/frontend-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gateway-service/gateway-service.iml" filepath="$PROJECT_DIR$/gateway-service/gateway-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/inventory-service/inventory-service.iml" filepath="$PROJECT_DIR$/inventory-service/inventory-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/order-service/order-service.iml" filepath="$PROJECT_DIR$/order-service/order-service.iml" />

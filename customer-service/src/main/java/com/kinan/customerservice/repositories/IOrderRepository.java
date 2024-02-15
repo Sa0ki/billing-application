@@ -15,4 +15,8 @@ public interface IOrderRepository {
                                              @RequestParam Integer quantity);
     @PostMapping("orders/confirm-order")
     ResponseEntity<Object> confirmOrder(@RequestParam String orderId);
+    @PostMapping("orders/get-orders")
+    ResponseEntity<Object> getOrders(@RequestParam String customerId);
+    @PostMapping("orders/get-order")
+    ResponseEntity<Object> getOrder(@RequestParam String orderId);
 }

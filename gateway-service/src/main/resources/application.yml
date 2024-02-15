@@ -20,6 +20,16 @@ spring:
           uri: http://localhost:8084
           predicates:
             - Path= /bills/**
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: http://localhost:4200
+            allowed-headers: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
     discovery:
       enabled: true
 eureka:

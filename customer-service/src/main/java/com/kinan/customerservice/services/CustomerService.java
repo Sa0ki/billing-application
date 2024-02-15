@@ -5,15 +5,12 @@ import com.kinan.customerservice.models.ResponseMessage;
 import com.kinan.customerservice.repositories.IBillRepository;
 import com.kinan.customerservice.repositories.ICustomerRepository;
 import com.kinan.customerservice.repositories.IOrderRepository;
-import feign.Response;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 /**
  * @author Eren
@@ -28,6 +25,12 @@ public class CustomerService {
         this.customerRepository = customerRepository;
         this.orderRepository = orderRepository;
         this.billRepository = billRepository;
+    }
+    public ResponseEntity<Object> getOrders(String customerId){
+        return this.orderRepository.getOrders(customerId);
+    }
+    public ResponseEntity<Object> getOrder(String orderId){
+        return this.orderRepository.getOrder(orderId);
     }
     public ResponseEntity<Object> placeOrder(String customerId, String productId, Integer quantity){
         return this.orderRepository.placeOrder(customerId, productId, quantity);

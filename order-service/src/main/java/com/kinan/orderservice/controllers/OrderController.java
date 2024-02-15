@@ -23,6 +23,10 @@ public class OrderController {
     public ResponseEntity<Object> confirmOrder(@RequestParam String orderId){
         return this.orderService.confirmOrder(orderId);
     }
+    @PostMapping("/get-orders")
+    public ResponseEntity<Object> getOrders(@RequestParam String customerId){
+        return this.orderService.getOrders(customerId);
+    }
     @PostMapping("/get-order")
     public ResponseEntity<Object> getOrder(@RequestParam String orderId){
         return this.orderService.getOrder(orderId);

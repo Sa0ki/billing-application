@@ -90,6 +90,11 @@ public class OrderService {
                 .status(HttpStatus.OK)
                 .body(Objects.requireNonNullElseGet(order, () -> new ResponseMessage("Order not found.")));
     }
+    public ResponseEntity<Object> getOrders(String customerId){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.orderRepository.findByCustomerId(customerId));
+    }
     private Product productExists(String productId){
         return this.productRepository.getProductById(productId);
     }

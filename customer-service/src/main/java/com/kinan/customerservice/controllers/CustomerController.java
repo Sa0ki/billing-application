@@ -15,6 +15,14 @@ public class CustomerController {
     public CustomerController(CustomerService customerService){
         this.customerService = customerService;
     }
+    @PostMapping("/orders/get-orders")
+    public ResponseEntity<Object> getOrders(@RequestParam String customerId){
+        return this.customerService.getOrders(customerId);
+    }
+    @PostMapping("/orders/get-order")
+    public ResponseEntity<Object> getOrder(@RequestParam String orderId){
+        return this.customerService.getOrder(orderId);
+    }
     @PostMapping("/orders/place-order")
     public ResponseEntity<Object> placeOrder(@RequestParam String customerId, @RequestParam String productId,
                                              @RequestParam Integer quantity){
