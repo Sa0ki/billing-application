@@ -1,0 +1,44 @@
+<div class="container">
+  <h1>Your Orders</h1>
+  <br>
+  <table class="table table-striped" *ngIf="order">
+    <thead class="thead-dark">
+    <tr>
+      <th>Order ID</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Products</th>
+      <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{ order.id }}</td>
+      <td>{{ order.date }}</td>
+      <td>{{ order.status }}</td>
+      <td>
+        <table class="table table-bordered">
+          <thead class="thead-light">
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let entry of order.products | keyvalue">
+            <td>{{ entry.value.name }} <b>x{{ entry.value.quantity }}</b></td>
+            <td>{{ entry.value.price }}$</td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+      <td>{{ order.totalDue }}$<br/><br/></td>
+      <td>
+        <button class="btn btn-success" (click)="navigateToGetBill(order.id)">
+        <b style="color: white">Get bill</b>
+      </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

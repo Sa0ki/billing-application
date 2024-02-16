@@ -53,13 +53,14 @@ public class BillService {
         }
 
         // Check if the bill exists.
-        if(this.billExists(orderId))
+        Bill bill = this.billExists(orderId);
+        if(bill != null)
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(new ResponseMessage("The bill is already available to download."));
+                    .body(bill);
 
         // If false, we create a new one.
-        Bill bill = new Bill();
+        bill = new Bill();
         bill.setCustomerId(customer.getId());
         bill.setOrderId(orderId);
         bill.setDate(order.getDate());
@@ -91,11 +92,15 @@ public class BillService {
         Bill bill = this.billRepository.findById(billId).orElse(null);
         return (bill == null) ? null: bill.getPdf();
     }
-    private Boolean billExists(String orderId){
-        return this.billRepository
+    private Bill billExists(String orderId){
+        List<Bill> bills =  this.billRepository
                 .findAll()
                 .stream()
-                .anyMatch(bill -> bill.getOrderId().equals(orderId));
+                .filter(bill -> bill.getOrderId().equals(orderId))
+                .toList();
+        if(bills.isEmpty())
+            return null;
+        return bills.get(0);
     }
     private Bill savePdfToDatabase(Bill bill, ByteArrayOutputStream outputStream){
         try{

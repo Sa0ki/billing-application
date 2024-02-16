@@ -3,6 +3,7 @@ import {JsonPipe, KeyValuePipe, NgForOf, NgIf} from "@angular/common";
 import {HttpClient} from "@angular/common/http";
 import {Product} from "../interfaces/Product";
 import {Order} from "../interfaces/Order";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-order-component',
@@ -11,20 +12,27 @@ import {Order} from "../interfaces/Order";
     NgIf,
     NgForOf,
     KeyValuePipe,
-    JsonPipe
+    JsonPipe,
+    RouterLink
   ],
   templateUrl: './order-component.component.html',
   styleUrl: './order-component.component.css'
 })
 export class OrderComponentComponent implements OnInit{
-  orders: Order[] = [];
-  private customerId = "65c77eb06b4c6743eb5c83ec";
-  constructor(private http: HttpClient) {
+  private apiUrl: string = "http://localhost:8080/customers";
+  public orders: Order[] = [];
+  private customerId: string = "";
+  constructor(private http: HttpClient, private navigateRouter: Router,
+              private activatedRoute: ActivatedRoute) {
   }
   ngOnInit(): void {
-    this.http.post(`http://localhost:8080/customers/orders/get-orders?customerId=${this.customerId}`, {})
+    this.activatedRoute.params.subscribe(params => {
+      console.log(params["customerId"])
+      this.customerId = params['customerId']
+    })
+    this.http.post<Order[]>(`${this.apiUrl}/orders/get-orders?customerId=${this.customerId}`, {})
       .subscribe({
-          next: (data) => {
+          next: (data: Order[]) => {
             if(Array.isArray(data))
               this.orders = data.map((order: any) => ({
                 id: order.id,
@@ -38,5 +46,8 @@ export class OrderComponentComponent implements OnInit{
           error: (err) => {console.log(err);}
         }
       )
+  }
+  navigateToOrderDetails(orderId: string) {
+    this.navigateRouter.navigate(['/order-details', orderId]);
   }
 }

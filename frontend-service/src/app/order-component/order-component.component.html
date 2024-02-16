@@ -7,32 +7,13 @@
       <th>Order ID</th>
       <th>Date</th>
       <th>Status</th>
-      <th>Products</th>
-      <th>Total</th>
     </tr>
     </thead>
     <tbody>
     <tr *ngFor="let o of orders">
-      <td>{{ o.id }}</td>
+      <td><a class="order-link" (click)="navigateToOrderDetails(o.id)">{{ o.id }}</a></td>
       <td>{{ o.date }}</td>
       <td>{{ o.status }}</td>
-      <td>
-        <table class="table table-bordered">
-          <thead class="thead-light">
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let entry of o.products | keyvalue">
-            <td>{{ entry.value.name }} <b>x{{ entry.value.quantity }}</b></td>
-            <td>{{ entry.value.price }}$</td>
-          </tr>
-          </tbody>
-        </table>
-      </td>
-      <td>{{ o.totalDue }}$</td>
     </tr>
     </tbody>
   </table>
