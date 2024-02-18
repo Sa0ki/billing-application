@@ -26,6 +26,15 @@ public class CustomerService {
         this.orderRepository = orderRepository;
         this.billRepository = billRepository;
     }
+    public ResponseEntity<Object> addCustomer(Customer customer){
+        if(this.customerRepository.findByEmail(customer.getEmail()) != null)
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(null);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.customerRepository.save(customer));
+    }
     public ResponseEntity<Object> getOrders(String customerId){
         return this.orderRepository.getOrders(customerId);
     }
