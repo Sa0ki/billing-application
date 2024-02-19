@@ -2,6 +2,7 @@ package com.kinan.keycloakservice.controllers;
 
 import com.kinan.keycloakservice.models.Customer;
 import com.kinan.keycloakservice.services.Service;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class AuthController {
         this.service = service;
     }
     @PostMapping("/orders/get-orders")
-    ResponseEntity<Object> getOrders(@RequestParam String customerId){
+    ResponseEntity<Object> getOrders(@RequestHeader HttpHeaders headers, @RequestParam String customerId){
         return this.service.getOrders(customerId);
     }
     @PostMapping("/orders/get-order")

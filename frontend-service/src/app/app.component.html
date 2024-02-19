@@ -11,7 +11,7 @@
 
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Billing Service</a>
+    <a class="navbar-brand" routerLink="/">Billing Service</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -27,6 +27,7 @@
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profile</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Account</a></li>
+            <li><a class="dropdown-item" routerLink="/login">Login</a></li>
             <li><a class="dropdown-item" href="#">Logout</a></li>
           </ul>
         </li>
@@ -40,4 +41,5 @@
 
 <!-- Navbar -->
 
-<router-outlet></router-outlet>
+<router-outlet>
+</router-outlet>

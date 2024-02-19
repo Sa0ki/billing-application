@@ -4,6 +4,7 @@ import {Order} from "../interfaces/Order";
 import {JsonPipe, KeyValuePipe, NgForOf, NgIf} from "@angular/common";
 import {Product} from "../interfaces/Product";
 import {ActivatedRoute, Route, Router} from "@angular/router";
+import {Service} from "../services/Service";
 
 @Component({
   selector: 'app-order-details',
@@ -18,30 +19,17 @@ import {ActivatedRoute, Route, Router} from "@angular/router";
   styleUrl: './order-details.component.css'
 })
 export class OrderDetailsComponent implements OnInit{
-  private apiUrl: string = "http://localhost:8080/customers";
   private orderId: string = "";
   public order: Order | undefined;
   constructor(private http: HttpClient, private activatedRoute: ActivatedRoute,
-              private navigateRoute: Router) {
+              private navigateRoute: Router, private service: Service) {
   }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => this.orderId = params['orderId']);
-    this.http.post<Order>(`${this.apiUrl}/orders/get-order?orderId=${this.orderId}`, {})
-      .subscribe({
-        next: (data: Order) => {
-          this.order = {
-            id: data.id,
-            customerId: data.customerId,
-            date: data.date,
-            status: data.status,
-            totalDue: data.totalDue,
-            products: new Map<string, Product>(Object.entries(data.products))
-          };
-        },
-        error: (err) => {
-          console.log(err);
-        }
-      });
+    this.getOrder();
+  }
+  public async getOrder(){
+    this.order = await this.service.getOrder(this.orderId);
   }
   navigateToGetBill(orderId: string){
     this.navigateRoute.navigate(["/bill", orderId])

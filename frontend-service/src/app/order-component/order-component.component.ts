@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {JsonPipe, KeyValuePipe, NgForOf, NgIf} from "@angular/common";
 import {HttpClient} from "@angular/common/http";
-import {Product} from "../interfaces/Product";
 import {Order} from "../interfaces/Order";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
+import {Service} from "../services/Service";
 
 @Component({
   selector: 'app-order-component',
@@ -19,33 +19,19 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
   styleUrl: './order-component.component.css'
 })
 export class OrderComponentComponent implements OnInit{
-  private apiUrl: string = "http://localhost:8080/customers";
   public orders: Order[] = [];
-  private customerId: string = "";
+  private customerId: string = "65c77eb06b4c6743eb5c83ec";
   constructor(private http: HttpClient, private navigateRouter: Router,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute, private service: Service) {
   }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      console.log(params["customerId"])
       this.customerId = params['customerId']
+      this.getOrders();
     })
-    this.http.post<Order[]>(`${this.apiUrl}/orders/get-orders?customerId=${this.customerId}`, {})
-      .subscribe({
-          next: (data: Order[]) => {
-            if(Array.isArray(data))
-              this.orders = data.map((order: any) => ({
-                id: order.id,
-                customerId: order.customerId,
-                date: order.date,
-                status: order.status,
-                totalDue: order.totalDue,
-                products: new Map<string, Product>(Object.entries(order.products))
-              }));
-            },
-          error: (err) => {console.log(err);}
-        }
-      )
+  }
+  public async getOrders(){
+    this.orders = await this.service.getOrders(this.customerId);
   }
   navigateToOrderDetails(orderId: string) {
     this.navigateRouter.navigate(['/order-details', orderId]);

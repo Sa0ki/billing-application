@@ -1,10 +1,13 @@
 package com.kinan.keycloakservice.services;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kinan.keycloakservice.configurations.TokenInterceptor;
+import com.kinan.keycloakservice.mappers.TokenResponse;
+import com.kinan.keycloakservice.mappers.TokenResponseMapper;
 import com.kinan.keycloakservice.models.Customer;
 import com.kinan.keycloakservice.models.ResponseMessage;
 import com.kinan.keycloakservice.repositories.ICustomerRepository;
-import org.checkerframework.checker.units.qual.C;
-import org.checkerframework.checker.units.qual.K;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.CredentialRepresentation;
@@ -15,7 +18,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Eren
@@ -23,13 +26,16 @@ import java.util.Map;
 @org.springframework.stereotype.Service
 public class Service {
     private final ICustomerRepository customerRepository;
+    private final TokenResponseMapper tokenResponseMapper;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String urlLogin = "http://localhost:8080/realms/customer-realm/protocol/openid-connect/token";
     private final String realm = "customer-realm";
     private final String adminUsername = "admin";
     private final String adminPassword = "admin";
-    public Service(ICustomerRepository customerRepository){
+    private String token = null;
+    public Service(ICustomerRepository customerRepository, TokenResponseMapper tokenResponseMapper){
         this.customerRepository = customerRepository;
+        this.tokenResponseMapper = tokenResponseMapper;
     }
     public ResponseEntity<Object> getOrders(String customerId){
         return this.customerRepository.getOrders(customerId);
@@ -44,10 +50,10 @@ public class Service {
         return this.customerRepository.confirmOrder(orderId);
     }
     public ResponseEntity<Object> getBill(String orderId, Customer customer){
-        return this.getBill(orderId, customer);
+        return this.customerRepository.getBill(orderId, customer);
     }
     public ResponseEntity<Object> downloadBill(String billId){
-        return this.downloadBill(billId);
+        return this.customerRepository.downloadBill(billId);
     }
     public ResponseEntity<Object> login(String username, String password){
         MultiValueMap<String, String> requestBody = new LinkedMultiValueMap<>();
@@ -61,16 +67,29 @@ public class Service {
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(requestBody, httpHeaders);
         try {
-
-            return this.restTemplate
+            ResponseEntity<Object> response = this.restTemplate
                     .exchange(
                             this.urlLogin,
                             HttpMethod.POST,
                             requestEntity,
                             Object.class
                     );
+            this.token = this.getToken(response.getBody());
+            if(this.token != null)
+                this.restTemplate.getInterceptors().add(new TokenInterceptor(this.token));
+            //System.out.println("token = " + this.token);
+            return response;
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+    }
+    private String getToken(Object response){
+        try{
+            TokenResponse tokenResponse = this.tokenResponseMapper.convertToTokenResponse(response);
+            return tokenResponse.getAccess_token();
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
     }
     public ResponseEntity<Object> register(Customer customer){
@@ -109,5 +128,8 @@ public class Service {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
+    }
+    public String getToken(){
+        return this.token;
     }
 }
