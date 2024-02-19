@@ -6,6 +6,8 @@ import {BillComponent} from "./bill/bill.component";
 import {LoginComponent} from "./login/login.component";
 import {HomeComponent} from "./home/home.component";
 import {AuthenticationGuard} from "./guards/authentication.guard";
+import {RegisterComponent} from "./register/register.component";
+import {AccountComponent} from "./account/account.component";
 
 export const routes: Routes = [
   {path: "orders/:customerId", component: OrderComponentComponent, canActivate: [AuthenticationGuard]},
@@ -13,5 +15,7 @@ export const routes: Routes = [
   {path: "customers", component: CustomerComponentComponent, canActivate: [AuthenticationGuard]},
   {path: "bill/:orderId", component: BillComponent, canActivate: [AuthenticationGuard]},
   {path: "login", component: LoginComponent},
+  {path: "register", component: RegisterComponent},
+  {path: "account", component: AccountComponent},
   {path: "", component: HomeComponent}
 ]

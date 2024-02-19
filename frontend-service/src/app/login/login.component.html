@@ -1,17 +1,27 @@
-<div class = "p-3">
-  <div class = "card">
-    <div class = "card-header">Authentication</div>
-    <div class = "alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
-    <div class = "cardBody">
-      <form [formGroup] = "formLogin" (ngSubmit)="login()">
-        <div class = "mb-3">
-          <label class = "form-label">Username</label>
-          <input type = "text" class = "form-control" formControlName="username">
-          <label class = "form-label">Password</label>
-          <input type = "password" class = "form-control" formControlName="password">
-        </div>
-        <button class = "btn btn-success">Login</button>
-      </form>
+<div class="container d-flex justify-content-center align-items-start">
+  <div class="p-5">
+    <div class="card">
+      <div class="card-header">Authentication</div>
+      <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
+      <div class="card-body">
+        <form [formGroup]="formLogin" (ngSubmit)="login()">
+          <div class="mb-4">
+            <label class="form-label">Email</label>
+            <input type="text" class="form-control" formControlName="username">
+          </div>
+          <div class="mb-4">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" formControlName="password">
+          </div>
+          <div class="text-center">
+            <button class="btn btn-success">Login</button>
+          </div>
+          <br/>
+          <div class="text-center">
+            <a routerLink="/register">Register</a>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

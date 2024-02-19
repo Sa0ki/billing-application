@@ -3,15 +3,16 @@ import {HttpClient} from "@angular/common/http";
 import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {NgIf} from "@angular/common";
 import {Service} from "../services/Service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    NgIf
-  ],
+    imports: [
+        ReactiveFormsModule,
+        NgIf,
+        RouterLink
+    ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -32,9 +33,10 @@ export class LoginComponent implements OnInit{
       let username = this.formLogin.value.username;
       let password = this.formLogin.value.password;
 
-      await this.service.login(username, password);
-
-      if(this.service.getTokenResponse() != undefined)
+      let result: boolean = await this.service.login(username, password);
+      if(!result)
+        this.errorMessage = "Bad credentials."
+      else
         this.navigateRouter.navigate(["/"])
     }
   }

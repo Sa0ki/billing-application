@@ -5,6 +5,7 @@ import {Order} from "../interfaces/Order";
 import {Product} from "../interfaces/Product";
 import {Bill} from "../interfaces/Bill";
 import {AppStateService} from "../app.state.service";
+import {Customer} from "../interfaces/Customer";
 
 @Injectable()
 
@@ -12,44 +13,67 @@ export class Service implements OnInit{
   private apiUrl: string = "http://localhost:9090/auth/customers";
   private token: TokenResponse | undefined;
   private tokenKey = "auth_token";
+  private email: string = "";
+  private name: string = "";
   constructor(private http: HttpClient, private appStateService: AppStateService) {
   }
   ngOnInit() {
   }
 
-  public async login(username: string, password: string): Promise<void> {
+  public async register(newCustomer: Customer): Promise<void>{
+    try{
+      const data: any = await this.http.post<any>(`${this.apiUrl}/register`, newCustomer).toPromise();
+      if (data) {
+        console.log("Account created !")
+        } else {
+          this.token = undefined;
+          console.log("REGISTER FAILED.");
+        }
+      }
+     catch (error) {
+      console.error('Error during register:', error);
+      throw error;
+    }
+  }
+  public async login(username: string, password: string): Promise<boolean> {
     try {
       const data: any = await this.http.post<any>(`${this.apiUrl}/login?username=${username}&password=${password}`, {}).toPromise();
-
       if (data) {
+        console.log(data)
         this.token = {
-          access_token: data.access_token,
-          expires_in: data.expires_in,
-          refresh_expires_in: data.refresh_expires_in,
-          refresh_token: data.refresh_token,
-          token_type: data.token_type,
-          not_before_policy: data['not-before-policy'],
-          session_state: data.session_state,
-          scope: data.scope
+          access_token: data.token,
+          expires_in: data.token.expires_in,
+          refresh_expires_in: data.token.refresh_expires_in,
+          refresh_token: data.token.refresh_token,
+          token_type: data.token.token_type,
+          not_before_policy: data.token['not-before-policy'],
+          session_state: data.token.session_state,
+          scope: data.token.scope
         };
-        if (this.token != undefined) {
+        this.email = data.email;
+        this.name = data.name;
+        if (this.token.access_token != undefined) {
           this.appStateService.setAuthState({
-            username: "",
+            name: this.name,
+            email: this.email,
             roles: "",
             isAuthenticated: true,
             token: this.token.access_token
           })
           this.saveTokenInLocalStorage();
+          return true;
         } else {
           this.token = undefined;
           console.log("BAD CREDENTIALS.");
+          return false;
         }
       }
     } catch (error) {
       this.token = undefined;
       console.error('Error during login:', error);
-      throw error;
+      return false;
     }
+    return false;
   }
   public async getOrders(customerId: string): Promise<Order[]> {
     try {
@@ -156,13 +180,23 @@ export class Service implements OnInit{
   }
 
   saveTokenInLocalStorage(){
-    if(this.token != undefined)
-      localStorage.setItem(this.tokenKey, this.token.access_token)
+    if(this.token != undefined){
+      localStorage.setItem(this.tokenKey, this.token.access_token);
+      localStorage.setItem("name", this.name);
+      localStorage.setItem("email", this.email);
+    }
+
   }
   clearToken(){
       localStorage.removeItem(this.tokenKey);
+      localStorage.removeItem("name");
+      localStorage.removeItem("email");
+      this.token = undefined;
+      this.email = "";
+      this.name = "";
       this.appStateService.setAuthState({
-        username: "",
+        name: "",
+        email: "",
         roles: "",
         isAuthenticated: false,
         token: undefined

@@ -24,15 +24,18 @@
           <a class="nav-link" routerLink="/customers">Customers</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Profile</a>
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            {{profile}}
+          </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Account</a></li>
-            <li><a class="dropdown-item" routerLink="/login">Login</a></li>
-            <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            <li><a class="dropdown-item" routerLink="/account">Account</a></li>
+            <li><a class="dropdown-item" *ngIf="!tokenExists()" routerLink="/login">Login</a></li>
+            <li><a class="dropdown-item" *ngIf="tokenExists()" (click)="logout()">Logout</a></li>
           </ul>
-        </li>
       </ul>
     </div>
+  </div>
+  <div>
   </div>
 </nav>
 

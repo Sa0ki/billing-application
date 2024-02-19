@@ -1,8 +1,6 @@
 package com.kinan.keycloakservice.services;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kinan.keycloakservice.configurations.TokenInterceptor;
+import com.kinan.keycloakservice.configurations.TokenConverter;
 import com.kinan.keycloakservice.mappers.TokenResponse;
 import com.kinan.keycloakservice.mappers.TokenResponseMapper;
 import com.kinan.keycloakservice.models.Customer;
@@ -18,7 +16,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 /**
  * @author Eren
@@ -75,10 +73,16 @@ public class Service {
                             Object.class
                     );
             this.token = this.getToken(response.getBody());
-            if(this.token != null)
-                this.restTemplate.getInterceptors().add(new TokenInterceptor(this.token));
-            //System.out.println("token = " + this.token);
-            return response;
+            Map<String, String> payload = TokenConverter.decodeToken(this.token);
+            if(payload != null)
+                return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of("token", this.token,
+                            "email", payload.get("email"),
+                            "name", payload.get("name")));
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(Map.of("token", this.token));
         }catch(Exception e){
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
