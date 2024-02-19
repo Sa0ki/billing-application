@@ -4,6 +4,7 @@ import {TokenResponse} from "../interfaces/TokenResponse";
 import {Order} from "../interfaces/Order";
 import {Product} from "../interfaces/Product";
 import {Bill} from "../interfaces/Bill";
+import {AppStateService} from "../app.state.service";
 
 @Injectable()
 
@@ -11,20 +12,9 @@ export class Service implements OnInit{
   private apiUrl: string = "http://localhost:9090/auth/customers";
   private token: TokenResponse | undefined;
   private tokenKey = "auth_token";
-  private tokenAccess = "";
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private appStateService: AppStateService) {
   }
   ngOnInit() {
-      this.token = this.getTokenFromLocalStorage();
-      console.log(this.token)
-  }
-
-  public setTokenAccess(tokenAccess: string){
-    this.tokenAccess = tokenAccess;
-  }
-
-  public getTokenAccess(){
-    return this.tokenAccess;
   }
 
   public async login(username: string, password: string): Promise<void> {
@@ -42,12 +32,14 @@ export class Service implements OnInit{
           session_state: data.session_state,
           scope: data.scope
         };
-
-        console.log(data);
-
         if (this.token != undefined) {
+          this.appStateService.setAuthState({
+            username: "",
+            roles: "",
+            isAuthenticated: true,
+            token: this.token.access_token
+          })
           this.saveTokenInLocalStorage();
-          console.log(this.token.access_token);
         } else {
           this.token = undefined;
           console.log("BAD CREDENTIALS.");
@@ -142,19 +134,23 @@ export class Service implements OnInit{
     }
   }
   getHttpOptions(){
-    if(this.token != undefined){
+    let tokenAcess = "";
+    if(this.token != undefined)
+        tokenAcess = this.token.access_token;
+    else
+      tokenAcess = this.getTokenFromLocalStorage();
+    if(tokenAcess != undefined && tokenAcess != "")
       return {
         headers: new HttpHeaders({
-          "Authorization": "Bearer " + this.tokenAccess
+          "Authorization": "Bearer " + tokenAcess
         })
       };
-    }
+      else
     return {};
   }
   getTokenResponse(){
     return this.token;
   }
-
   getTokenFromLocalStorage(): any{
       return localStorage.getItem(this.tokenKey);
   }
@@ -164,7 +160,12 @@ export class Service implements OnInit{
       localStorage.setItem(this.tokenKey, this.token.access_token)
   }
   clearToken(){
-    if(this.token != undefined)
       localStorage.removeItem(this.tokenKey);
+      this.appStateService.setAuthState({
+        username: "",
+        roles: "",
+        isAuthenticated: false,
+        token: undefined
+      })
   }
 }
