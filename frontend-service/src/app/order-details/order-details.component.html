@@ -34,9 +34,12 @@
       </td>
       <td>{{ order.totalDue }}$<br/><br/></td>
       <td>
-        <button class="btn btn-success" (click)="navigateToGetBill(order.id)">
+        <button class="btn btn-success" *ngIf="order.status == 'CONFIRMED'" (click)="navigateToGetBill(order.id)">
         <b style="color: white">Get bill</b>
       </button>
+        <button class="btn btn-success" *ngIf="order.status == 'CREATED'" (click)="confirmOrder(order.id)">
+          <b style="color: white">Confirm order</b>
+        </button>
       </td>
     </tr>
     </tbody>

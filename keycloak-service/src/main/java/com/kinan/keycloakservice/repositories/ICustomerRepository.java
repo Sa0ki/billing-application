@@ -27,4 +27,6 @@ public interface ICustomerRepository {
     ResponseEntity<Object> getBill(@RequestParam String orderId, @RequestBody Customer customer);
     @PostMapping("customers/bills/download-bill")
     ResponseEntity<Object> downloadBill(@RequestParam String billId);
+    @PostMapping("customers/get-customer")
+    ResponseEntity<Object> getCustomer(@RequestParam String email);
 }

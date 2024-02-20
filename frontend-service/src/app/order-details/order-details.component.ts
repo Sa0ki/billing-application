@@ -34,4 +34,8 @@ export class OrderDetailsComponent implements OnInit{
   navigateToGetBill(orderId: string){
     this.navigateRoute.navigate(["/bill", orderId])
   }
+  async confirmOrder(orderId: string){
+    await this.service.confirmOrder(orderId);
+    await this.getOrder();
+  }
 }

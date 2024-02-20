@@ -1,0 +1,28 @@
+<!-- products.component.html -->
+
+<div class="container" *ngIf="products">
+  <div class="row">
+    <div class="col">
+      <h2>Liste des produits</h2>
+      <div class="row">
+        <div class="col-md-4" *ngFor="let product of products">
+          <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description }}</p>
+              <p class="card-text">Prix: {{ product.price }}</p>
+              <p class="card-text">Quantité: {{ product.quantity }}</p>
+              <p class="card-text">Catégorie: {{ product.category }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="addToCart(product.id, 1)">Add to cart</button>
+                </div>
+                <small class="text-muted">Available</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

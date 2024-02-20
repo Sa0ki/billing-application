@@ -136,4 +136,9 @@ public class Service {
     public String getToken(){
         return this.token;
     }
+    public ResponseEntity<Object> getCustomer(String email){
+        ResponseEntity<Object> response = this.customerRepository.getCustomer(email);
+        System.out.println(response.getBody());
+        return response;
+    }
 }

@@ -80,20 +80,21 @@ public class PdfService {
             order.getProducts().forEach((idProduct, product) -> {
                 productsNames.add(product.getName());
                 productsNames.add("\n");
-                productsNames.add("x" + product.getQuantity().toString());
+                productsNames.add("(" + product.getPrice() + "$)" + " x" + product.getQuantity().toString());
                 productsNames.add("\n\n");
 
                 productsPrices.add(Double.toString(product.getPrice() * product.getQuantity()) + "$");
                 productsPrices.add("\n\n\n");
 
-            cell.setPhrase(productsNames);
-            table.addCell(cell);
-
-            cell.setPhrase(productsPrices);
-            table.addCell(cell);
-
-            cell.setPaddingTop(0);
         });
+
+        cell.setPhrase(productsNames);
+        table.addCell(cell);
+
+        cell.setPhrase(productsPrices);
+        table.addCell(cell);
+
+        cell.setPaddingTop(0);
 
         cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
         cell.setPhrase(new Phrase("Order's total", new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK)));

@@ -44,4 +44,8 @@ public class CustomerController {
     public ResponseEntity<Object> downloadBill(@RequestParam String billId){
         return this.customerService.downloadBill(billId);
     }
+    @PostMapping("/get-customer")
+    public ResponseEntity<Object> getCustomer(@RequestParam String email){
+        return this.customerService.getCustomer(email);
+    }
 }

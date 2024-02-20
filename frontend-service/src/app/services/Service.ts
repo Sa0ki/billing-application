@@ -20,6 +20,25 @@ export class Service implements OnInit{
   ngOnInit() {
   }
 
+  public async getCustomerInformation(email: string): Promise<void>{
+    try{
+      const data: any = await this.http.post<any>(`${this.apiUrl}/get-customer?email=${email}`, {}, this.getHttpOptions()).toPromise();
+      if(data){
+        this.appStateService.setCustomer({
+          id: data.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          password: data.password,
+          dateOfBirth: data.dateOfBirth
+        })
+        console.log(this.appStateService.customer)
+      }
+    }catch(error){
+      console.log(error)
+    }
+
+  }
   public async register(newCustomer: Customer): Promise<void>{
     try{
       const data: any = await this.http.post<any>(`${this.apiUrl}/register`, newCustomer).toPromise();
@@ -39,7 +58,6 @@ export class Service implements OnInit{
     try {
       const data: any = await this.http.post<any>(`${this.apiUrl}/login?username=${username}&password=${password}`, {}).toPromise();
       if (data) {
-        console.log(data)
         this.token = {
           access_token: data.token,
           expires_in: data.token.expires_in,
@@ -52,6 +70,7 @@ export class Service implements OnInit{
         };
         this.email = data.email;
         this.name = data.name;
+        await this.getCustomerInformation(this.email);
         if (this.token.access_token != undefined) {
           this.appStateService.setAuthState({
             name: this.name,
@@ -75,9 +94,9 @@ export class Service implements OnInit{
     }
     return false;
   }
-  public async getOrders(customerId: string): Promise<Order[]> {
+  public async getOrders(): Promise<Order[]> {
     try {
-      const data: any = await this.http.post<Order[]>(`${this.apiUrl}/orders/get-orders?customerId=${customerId}`, {}, this.getHttpOptions()).toPromise();
+      const data: any = await this.http.post<Order[]>(`${this.apiUrl}/orders/get-orders?customerId=${localStorage.getItem("id")}`, {}, this.getHttpOptions()).toPromise();
 
       if (Array.isArray(data)) {
         return data.map((order: any) => ({
@@ -115,11 +134,8 @@ export class Service implements OnInit{
   }
   public async getBill(orderId: string): Promise<Bill> {
     try {
-      const data: any = await this.http.post<Bill>(`${this.apiUrl}/bills/get-bill?orderId=${orderId}`, {
-        id: "65c77eb06b4c6743eb5c83ec",
-        firstName: "Kinan",
-        lastName: "Saad"
-      },
+      console.log(this.appStateService.customer)
+      const data: any = await this.http.post<Bill>(`${this.apiUrl}/bills/get-bill?orderId=${orderId}`, this.appStateService.customer,
         this.getHttpOptions()).toPromise();
 
       const bill: Bill = {
@@ -146,7 +162,7 @@ export class Service implements OnInit{
 
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'facture.pdf';
+      a.download = 'bill.pdf';
       document.body.appendChild(a);
       a.click();
 
@@ -184,6 +200,8 @@ export class Service implements OnInit{
       localStorage.setItem(this.tokenKey, this.token.access_token);
       localStorage.setItem("name", this.name);
       localStorage.setItem("email", this.email);
+      localStorage.setItem("id", this.appStateService.customer.id);
+      localStorage.setItem("dateOfBirth", this.appStateService.customer.dateOfBirth);
     }
 
   }
@@ -191,6 +209,7 @@ export class Service implements OnInit{
       localStorage.removeItem(this.tokenKey);
       localStorage.removeItem("name");
       localStorage.removeItem("email");
+    localStorage.removeItem("id");
       this.token = undefined;
       this.email = "";
       this.name = "";
@@ -201,5 +220,36 @@ export class Service implements OnInit{
         isAuthenticated: false,
         token: undefined
       })
+  }
+  public async getProducts(): Promise<any>{
+    let products: Product[] = [];
+    try{
+      const data: any = await this.http.get<any>("http://localhost:9090/products/get-all-products").toPromise();
+      if(data){
+        products = data;
+        return products;
+      }
+    }catch(error){
+      console.log(error);
+      return [];
+    }
+  }
+  public async addToCart(productId: string, quantity: number): Promise<any>{
+    try{
+      const data: any = await this.http.post<Order>(`${this.apiUrl}/orders/place-order?customerId=${localStorage.getItem("id")}&productId=${productId}&quantity=${quantity}`, {}, this.getHttpOptions()).toPromise();
+      if(data){
+        console.log(data)
+      }
+    }catch(error){
+      console.log(error);
+      return [];
+    }
+  }
+  async confirmOrder(orderId: string):Promise<any>{
+    try{
+        return await this.http.post<Order>(`${this.apiUrl}/orders/confirm-order?orderId=${orderId}`, {}, this.getHttpOptions()).toPromise();
+    }catch(error){
+      console.log(error);
+    }
   }
 }

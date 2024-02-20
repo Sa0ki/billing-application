@@ -67,4 +67,12 @@ public class CustomerService {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(resource);
     }
+    public ResponseEntity<Object> getCustomer(String email){
+        Customer customer = this.customerRepository.findByEmail(email);
+        if(customer != null)
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(customer);
+        return null;
+    }
 }

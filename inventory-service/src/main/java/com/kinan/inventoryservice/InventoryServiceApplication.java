@@ -15,7 +15,7 @@ public class InventoryServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(InventoryServiceApplication.class, args);
     }
-    /*
+/*
     @Bean
     public CommandLineRunner commandLineRunner(IProductRepository productRepository){
         return args -> {
@@ -108,6 +108,5 @@ public class InventoryServiceApplication {
             ));
         };
 
-    }
-    */
+    }*/
 }

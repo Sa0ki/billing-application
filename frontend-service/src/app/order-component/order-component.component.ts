@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Order} from "../interfaces/Order";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {Service} from "../services/Service";
+import {AppStateService} from "../app.state.service";
 
 @Component({
   selector: 'app-order-component',
@@ -20,18 +21,16 @@ import {Service} from "../services/Service";
 })
 export class OrderComponentComponent implements OnInit{
   public orders: Order[] = [];
-  private customerId: string = "65c77eb06b4c6743eb5c83ec";
+  private customerId: string = "";
   constructor(private http: HttpClient, private navigateRouter: Router,
-              private activatedRoute: ActivatedRoute, private service: Service) {
+              private activatedRoute: ActivatedRoute, private service: Service,
+              public appStateService: AppStateService) {
   }
   ngOnInit(): void {
-    this.activatedRoute.params.subscribe(params => {
-      this.customerId = params['customerId']
       this.getOrders();
-    })
   }
   public async getOrders(){
-    this.orders = await this.service.getOrders(this.customerId);
+    this.orders = await this.service.getOrders();
   }
   navigateToOrderDetails(orderId: string) {
     this.navigateRouter.navigate(['/order-details', orderId]);

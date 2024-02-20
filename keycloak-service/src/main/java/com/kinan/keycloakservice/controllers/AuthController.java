@@ -50,9 +50,8 @@ public class AuthController {
     public ResponseEntity<Object> register(@RequestBody Customer customer) {
         return this.service.register(customer);
     }
-    @GetMapping
-    public String hello(){
-        return "hello";
+    @PostMapping("/get-customer")
+    public ResponseEntity<Object> getCustomer(@RequestParam String email){
+        return this.service.getCustomer(email);
     }
-
 }
