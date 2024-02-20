@@ -1,6 +1,7 @@
 package com.kinan.keycloakservice.repositories;
 
 import com.kinan.keycloakservice.models.Customer;
+import com.kinan.keycloakservice.models.Order;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,4 +30,6 @@ public interface ICustomerRepository {
     ResponseEntity<Object> downloadBill(@RequestParam String billId);
     @PostMapping("customers/get-customer")
     ResponseEntity<Object> getCustomer(@RequestParam String email);
+    @PostMapping("customers/orders/update-order")
+    ResponseEntity<Object> updateOrder(@RequestBody Order order);
 }

@@ -3,8 +3,7 @@ package com.kinan.keycloakservice.services;
 import com.kinan.keycloakservice.configurations.TokenConverter;
 import com.kinan.keycloakservice.mappers.TokenResponse;
 import com.kinan.keycloakservice.mappers.TokenResponseMapper;
-import com.kinan.keycloakservice.models.Customer;
-import com.kinan.keycloakservice.models.ResponseMessage;
+import com.kinan.keycloakservice.models.*;
 import com.kinan.keycloakservice.repositories.ICustomerRepository;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -15,6 +14,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,5 +141,11 @@ public class Service {
         ResponseEntity<Object> response = this.customerRepository.getCustomer(email);
         System.out.println(response.getBody());
         return response;
+    }
+    public ResponseEntity<Object> updateOrder(OrderProducts orderProducts){
+        orderProducts.getOrder().setProducts(new HashMap<>());
+        for(Product p: orderProducts.getProducts())
+            orderProducts.getOrder().getProducts().put(p.getId(), p);
+        return this.customerRepository.updateOrder(orderProducts.getOrder());
     }
 }

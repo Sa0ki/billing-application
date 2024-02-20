@@ -1,6 +1,7 @@
 package com.kinan.customerservice.services;
 
 import com.kinan.customerservice.models.Customer;
+import com.kinan.customerservice.models.Order;
 import com.kinan.customerservice.models.ResponseMessage;
 import com.kinan.customerservice.repositories.IBillRepository;
 import com.kinan.customerservice.repositories.ICustomerRepository;
@@ -74,5 +75,8 @@ public class CustomerService {
                     .status(HttpStatus.OK)
                     .body(customer);
         return null;
+    }
+    public ResponseEntity<Object> updateOrder(Order order){
+        return this.orderRepository.updateOrder(order);
     }
 }

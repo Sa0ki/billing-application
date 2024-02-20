@@ -1,6 +1,8 @@
 import {Injectable, OnInit} from '@angular/core';
 import {Service} from "./services/Service";
 import {Customer} from "./interfaces/Customer";
+import {Order} from "./interfaces/Order";
+import {Product} from "./interfaces/Product";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +16,7 @@ export class AppStateService{
     token: "undefined"
   }
   public customer: any;
+  public order: any;
   constructor() { }
 
 
@@ -28,6 +31,16 @@ export class AppStateService{
       email: c.email,
       password: c.password,
       dateOfBirth: c.dateOfBirth
+    }
+  }
+  public setOrder(o: Order){
+    this.order = {
+      id: o.id,
+      customerId: o.customerId,
+      date: o.date,
+      status: o.status,
+      totalDue: o.totalDue,
+      products: o.products
     }
   }
 }

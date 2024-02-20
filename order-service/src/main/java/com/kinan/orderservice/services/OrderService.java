@@ -6,6 +6,7 @@ import com.kinan.orderservice.models.Product;
 import com.kinan.orderservice.models.ResponseMessage;
 import com.kinan.orderservice.repositories.IOrderRepository;
 import com.kinan.orderservice.repositories.IProductRepository;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -94,6 +95,14 @@ public class OrderService {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(this.orderRepository.findByCustomerId(customerId));
+    }
+    public ResponseEntity<Object> updateOrder(Order order){
+        System.out.println(order);
+        order = this.orderRepository.save(order);
+        System.out.println(order);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(order);
     }
     private Product productExists(String productId){
         return this.productRepository.getProductById(productId);

@@ -1,0 +1,48 @@
+<div class="container" *ngIf="order">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between mt-3">
+          <div>
+            <b>{{order.date}}</b>
+          </div>
+          <div class="ms-auto">
+            <b>{{order.status}}</b>
+          </div>
+        </div>
+        <div class="card-body">
+          <h5>ID: {{order.id}}</h5>
+
+          <form class="mt-4">
+            <table class="table text-center">
+              <thead>
+              <th></th>
+              <th>Products</th>
+              <th>Quantity</th>
+              </thead>
+              <tbody>
+              <tr *ngFor="let entry of order.products | keyvalue">
+                <td><button type="button" class="btn btn-danger" (click)="removeProductFromMap(entry.value.id)">Remove</button></td>
+                <td>{{entry.value.name}}</td>
+                <td>{{entry.value.quantity}}</td>
+                <td><button type="button" class="btn btn-primary" (click)="setNewQuantityToProduct(entry.value.id, 1)">+</button></td>
+                <td><button type="button" class="btn btn-danger" (click)="setNewQuantityToProduct(entry.value.id, -1)">-</button></td>
+              </tr>
+              <tr class="d-flex mt-3">
+                <td><b>Total: {{order.totalDue}}$</b></td>
+              </tr>
+              </tbody>
+            </table>
+
+
+            <div class="text-center mt-5">
+              <button type="button" class="btn btn-success" (click)="editOrder()">Submit Order</button>
+            </div>
+            <br/>
+            <div class="alert alert-success" *ngIf="message">{{ message }}</div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

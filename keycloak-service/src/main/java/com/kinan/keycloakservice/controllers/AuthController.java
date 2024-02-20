@@ -1,11 +1,16 @@
 package com.kinan.keycloakservice.controllers;
 
 import com.kinan.keycloakservice.models.Customer;
+import com.kinan.keycloakservice.models.Order;
+import com.kinan.keycloakservice.models.OrderProducts;
+import com.kinan.keycloakservice.models.Product;
 import com.kinan.keycloakservice.services.Service;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Eren
@@ -53,5 +58,9 @@ public class AuthController {
     @PostMapping("/get-customer")
     public ResponseEntity<Object> getCustomer(@RequestParam String email){
         return this.service.getCustomer(email);
+    }
+    @PostMapping("/orders/update-order")
+    public ResponseEntity<Object> updateOrder(@RequestBody OrderProducts orderProducts){
+        return this.service.updateOrder(orderProducts);
     }
 }

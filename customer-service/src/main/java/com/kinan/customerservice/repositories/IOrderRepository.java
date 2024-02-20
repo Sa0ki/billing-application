@@ -1,8 +1,10 @@
 package com.kinan.customerservice.repositories;
 
+import com.kinan.customerservice.models.Order;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -19,4 +21,6 @@ public interface IOrderRepository {
     ResponseEntity<Object> getOrders(@RequestParam String customerId);
     @PostMapping("orders/get-order")
     ResponseEntity<Object> getOrder(@RequestParam String orderId);
+    @PostMapping("orders/update-order")
+    ResponseEntity<Object> updateOrder(@RequestBody Order order);
 }

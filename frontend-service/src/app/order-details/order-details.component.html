@@ -41,6 +41,11 @@
           <b style="color: white">Confirm order</b>
         </button>
       </td>
+      <td>
+        <button class="btn btn-danger" *ngIf="order.status == 'CREATED'" (click)="editOrder(order.id)">
+          <b style="color: white">Edit order</b>
+        </button>
+      </td>
     </tr>
     </tbody>
   </table>

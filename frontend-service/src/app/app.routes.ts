@@ -9,10 +9,12 @@ import {AuthenticationGuard} from "./guards/authentication.guard";
 import {RegisterComponent} from "./register/register.component";
 import {AccountComponent} from "./account/account.component";
 import {ProductsComponent} from "./products/products.component";
+import {EditOrderComponent} from "./edit-order/edit-order.component";
 
 export const routes: Routes = [
   {path: "orders", component: OrderComponentComponent, canActivate: [AuthenticationGuard]},
   {path: "order-details/:orderId", component: OrderDetailsComponent, canActivate: [AuthenticationGuard]},
+  {path: "edit-order/:orderId", component: EditOrderComponent, canActivate: [AuthenticationGuard]},
   {path: "customers", component: CustomerComponentComponent, canActivate: [AuthenticationGuard]},
   {path: "bill/:orderId", component: BillComponent, canActivate: [AuthenticationGuard]},
   {path: "account", component: AccountComponent, canActivate: [AuthenticationGuard]},

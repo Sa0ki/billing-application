@@ -1,6 +1,7 @@
 package com.kinan.customerservice.controllers;
 
 import com.kinan.customerservice.models.Customer;
+import com.kinan.customerservice.models.Order;
 import com.kinan.customerservice.services.CustomerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,5 +48,9 @@ public class CustomerController {
     @PostMapping("/get-customer")
     public ResponseEntity<Object> getCustomer(@RequestParam String email){
         return this.customerService.getCustomer(email);
+    }
+    @PostMapping("/orders/update-order")
+    ResponseEntity<Object> updateOrder(@RequestBody Order order){
+        return this.customerService.updateOrder(order);
     }
 }

@@ -133,6 +133,13 @@ export class Service implements OnInit{
     }
   }
   public async getBill(orderId: string): Promise<Bill> {
+    this.appStateService.customer = {
+      id: localStorage.getItem("id"),
+      firstName: localStorage.getItem("name"),
+      email: localStorage.getItem("email"),
+      dateOfBirth: localStorage.getItem("dateOfBirth"),
+      lastName: ""
+    }
     try {
       console.log(this.appStateService.customer)
       const data: any = await this.http.post<Bill>(`${this.apiUrl}/bills/get-bill?orderId=${orderId}`, this.appStateService.customer,
@@ -237,9 +244,6 @@ export class Service implements OnInit{
   public async addToCart(productId: string, quantity: number): Promise<any>{
     try{
       const data: any = await this.http.post<Order>(`${this.apiUrl}/orders/place-order?customerId=${localStorage.getItem("id")}&productId=${productId}&quantity=${quantity}`, {}, this.getHttpOptions()).toPromise();
-      if(data){
-        console.log(data)
-      }
     }catch(error){
       console.log(error);
       return [];
@@ -248,6 +252,16 @@ export class Service implements OnInit{
   async confirmOrder(orderId: string):Promise<any>{
     try{
         return await this.http.post<Order>(`${this.apiUrl}/orders/confirm-order?orderId=${orderId}`, {}, this.getHttpOptions()).toPromise();
+    }catch(error){
+      console.log(error);
+    }
+  }
+
+
+  async editOrder(order: Order, productsArray: Product[]): Promise<any>{
+    console.log(order)
+    try{
+      await this.http.post<any>(`${this.apiUrl}/orders/update-order`, {"order": order, "products": productsArray}, this.getHttpOptions()).toPromise();
     }catch(error){
       console.log(error);
     }
