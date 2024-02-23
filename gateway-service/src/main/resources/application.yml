@@ -5,29 +5,30 @@ spring:
     gateway:
       routes:
         - id: customer-service-route
-          uri: http://localhost:8081
+          uri: ${CUSTOMER_SERVICE_URL:http://localhost:8081}
           predicates:
             - Path= /customers/**
         - id: inventory-service-route
-          uri: http://localhost:8082
+          uri: ${INVENTORY_SERVICE_URL:http://localhost:8082}
           predicates:
             - Path= /products/**
         - id: order-service-route
-          uri: http://localhost:8083
+          uri: ${ORDER_SERVICE_URL:http://localhost:8083}
           predicates:
             - Path= /orders/**
         - id: bill-service-route
-          uri: http://localhost:8084
+          uri: ${BILL_SERVICE_URL:http://localhost:8084}
           predicates:
             - Path= /bills/**
         - id: keycloak-service
-          uri: http://localhost:8085
+          uri: ${KEYCLOAK_SERVICE_URL:http://localhost:8085}
           predicates:
             - Path= /auth/**
       globalcors:
         cors-configurations:
           '[/**]':
             allowed-origins: http://localhost:4200
+            #${ANGULAR_SERVICE_URL:http://localhost:4200}
             allowed-headers: "*"
             allowed-methods:
               - GET
@@ -40,6 +41,6 @@ eureka:
   instance:
     prefer-ip-address: true
   client.service-url:
-    defaultZone: http://localhost:8761/eureka
+    defaultZone: ${DISCOVERY_SERVICE_URL:http://localhost:8761/eureka}
 server:
   port: 9090

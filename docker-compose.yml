@@ -1,0 +1,96 @@
+services:
+  eureka-service:
+    build: ./eureka-service
+    container_name: eureka-service
+    ports:
+      - "8761:8761"
+    expose:
+      - "8761"
+  customer-service:
+    build: ./customer-service
+    container_name: customer-service
+    ports:
+      - "8081:8081"
+    expose:
+      - "8081"
+    depends_on:
+      - eureka-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service
+    ports:
+      - "8082:8082"
+    expose:
+      - "8082"
+    depends_on:
+      - eureka-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "8083:8083"
+    expose:
+      - "8083"
+    depends_on:
+      - eureka-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+  bill-service:
+    build: ./bill-service
+    container_name: bill-service
+    ports:
+      - "8084:8084"
+    expose:
+      - "8084"
+    depends_on:
+      - eureka-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+  keycloak-service:
+    build: ./keycloak-service
+    container_name: keycloak-service
+    ports:
+      - "8085:8085"
+    expose:
+      - "8085"
+    depends_on:
+      - eureka-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+  keycloak-server:
+    build: ./keycloak-server
+    container_name: keycloak-server
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+  angular-service:
+    build: ./frontend-service
+    container_name: angular-service
+    ports:
+      - "4200:80"
+    expose:
+      - "4200"
+  gateway-service:
+    build: ./gateway-service
+    container_name: gateway-service
+    ports:
+      - "9090:9090"
+    expose:
+      - "9090"
+    depends_on:
+      - eureka-service
+      - angular-service
+    environment:
+      - DISCOVERY_SERVICE_URL=http://eureka-service:8761/eureka
+      - CUSTOMER_SERVICE_URL=http://customer-service:8081
+      - INVENTORY_SERVICE_URL=http://inventory-service:8082
+      - ORDER_SERVICE_URL:http=//order-service:8083
+      - BILL_SERVICE_URL:http=//bill-service:8084
+      - KEYCLOAK_SERVICE_URL=http://keycloak-service:8085
+      #- ANGULAR_SERVICE_URL=http://angular-service:4200
+
